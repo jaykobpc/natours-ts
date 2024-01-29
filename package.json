@@ -2,12 +2,14 @@
   "name": "natours",
   "version": "1.0.0",
   "description": "Natours typescript version",
-  "main": "server.ts",
+  "main": "index.js",
   "scripts": {
     "dev": "nodemon server.ts",
     "prod": "NODE_ENV=production nodemon server.ts",
     "lint": "eslint --ext .js,.ts ./",
-    "format": "prettier --write \"**/*.{js,ts,scss,html,md,json}\" --ignore-path .gitignore"
+    "format": "prettier --write \"**/*.{js,ts,scss,html,md,json}\" --ignore-path .gitignore",
+    "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js",
+    "build:js": "parcel build ./public/js/index.js --out-dir ./public/js --out-file bundle.js"
   },
   "keywords": [
     "Typescript",
@@ -64,9 +66,11 @@
     "@types/xss-filters": "^0.0.30",
     "eslint": "^8.56.0",
     "nodemon": "^3.0.3",
+    "parcel-bundler": "^1.12.5",
     "prettier": "^3.2.4",
     "ts-node": "^10.9.2"
   },
+  "browserslist": "> 0.5%, last 2 versions, not dead",
   "engines": {
     "node": "^18 || ^16 || ^14.19",
     "npm": ">= 6.13.4",

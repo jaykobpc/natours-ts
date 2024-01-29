@@ -9,7 +9,7 @@ html
       link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato:300,300i,700')
       title Natours | #{title}
 
-  body(data-alert=`${alert ? alert : ''}`)
+  body(data-alert=`${alert ? alert : ''}` translate=no)
     // HEADER
     include _header
 
@@ -20,8 +20,5 @@ html
     // FOOTER
     include _footer
 
-    //- script(src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js')
-    //- script(src='/js/mapbox.js')
-    //- script(src='/js/login.js')
     script(src='https://js.stripe.com/v3/')
     script(src='/js/bundle.js')

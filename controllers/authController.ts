@@ -8,7 +8,7 @@ import AppError from '../utils/appError';
 import Email from '../utils/email';
 import { IUser } from '../types/User';
 
-const signToken = (id: string): string => {
+const signToken = (id: string) => {
   return jwt.sign({ id }, `${process.env.JWT_SECRET}`, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
@@ -42,7 +42,7 @@ const createSendToken = (
 
   user.password = undefined;
 
-  res.status(statusCode).json({
+  return res.status(statusCode).json({
     status: 'success',
     token,
     data: {
@@ -79,10 +79,13 @@ export default {
 
       const user = await User.findOne({ email }).select('+password');
 
-      if (
-        !user ||
-        !(await user.correctPassword(password, user.password as string))
-      ) {
+      // VERIFY PASSWORD
+      const correctPwd = await user?.correctPassword(
+        password,
+        `${user?.password}`,
+      );
+
+      if (!user || !correctPwd) {
         return next(new AppError('Incorrect email or password', 401));
       }
 
@@ -97,7 +100,7 @@ export default {
     });
     res.status(200).json({ status: 'success' });
   },
-  
+
   protect: catchAsync(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       let token;
