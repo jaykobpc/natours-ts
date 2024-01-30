@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon server.ts",
-    "prod": "NODE_ENV=production nodemon server.ts",
+    "prod": "APP_ENV=production nodemon server.ts",
     "lint": "eslint --ext .js,.ts ./",
     "format": "prettier --write \"**/*.{js,ts,scss,html,md,json}\" --ignore-path .gitignore",
     "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js",

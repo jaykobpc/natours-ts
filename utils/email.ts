@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import pug from 'pug';
-import htmlToText from 'html-to-text';
+import { convert } from 'html-to-text';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 type User = { email: string; name: string };
@@ -15,7 +15,7 @@ class Email {
     this.to = user.email;
     this.firstName = user.name.split(' ')[0];
     this.url = url;
-    this.from = `Jaykob W <${process.env.MAIL_FROM_NAME}>`;
+    this.from = `Natours <${process.env.MAIL_FROM_NAME}>`;
   }
 
   newTransport(): nodemailer.Transporter<SMTPTransport.SentMessageInfo> {
@@ -48,8 +48,10 @@ class Email {
       to: this.to,
       subject,
       html,
-      text: htmlToText.convert(html),
+      text: convert(html),
     };
+
+    console.log(mailOptions);
 
     await this.newTransport().sendMail(mailOptions);
   }

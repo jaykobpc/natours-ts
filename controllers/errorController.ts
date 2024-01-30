@@ -12,7 +12,7 @@ const handleCastErrorDB = (err: CastError): AppError => {
 };
 
 const handleDuplicateFieldsDB = (err: any): AppError => {
-  const value: string = err!.errmsg!.match(/(["'])(\\?.)*?\1/)[0];
+  const value: string = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
 
   const message = `Duplicate field value: ${value}. Please use another value!`;
   return new AppError(message, 400);
@@ -32,6 +32,7 @@ const handleJWTExpiredError = () =>
   new AppError('Your token has expired! Please log in again.', 401);
 
 const sendErrorDev = (err: AppError, req: Request, res: Response) => {
+  // A) API
   if (req.originalUrl.startsWith('/api')) {
     return res.status(err.statusCode).json({
       status: err.status,
@@ -41,6 +42,8 @@ const sendErrorDev = (err: AppError, req: Request, res: Response) => {
     });
   }
 
+  // B) RENDERED WEBSITE
+  console.error('ERROR 💥', err);
   return res.status(err.statusCode).render('error', {
     title: 'Something went wrong!',
     msg: err.message,
@@ -56,6 +59,8 @@ const sendErrorProd = (err: AppError, req: Request, res: Response) => {
       });
     }
 
+    console.error('ERROR 💥', err);
+
     return res.status(500).json({
       status: 'error',
       message: 'Something went very wrong!',
@@ -69,24 +74,22 @@ const sendErrorProd = (err: AppError, req: Request, res: Response) => {
     });
   }
 
+  console.error('ERROR 💥', err);
+
   return res.status(err.statusCode).render('error', {
     title: 'Something went wrong!',
     msg: 'Please try again later.',
   });
 };
 
-export default (
-  err: AppError | CastError | any,
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export default (err: any, req: Request, res: Response, next: NextFunction) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
 
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.APP_ENV === 'development') {
+    console.log('dev');
     sendErrorDev(err, req, res);
-  } else if (process.env.NODE_ENV === 'production') {
+  } else if (process.env.APP_ENV === 'production') {
     let error = { ...err };
     error.message = err.message;
 

@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import mongoose, { ConnectOptions } from 'mongoose';
-import app from './app';
 
 process.on('uncaughtException', (err: any) => {
   console.log('UNCAUGHT EXCEPTION!');
@@ -8,12 +7,14 @@ process.on('uncaughtException', (err: any) => {
   process.exit(1);
 });
 
-dotenv.config();
+dotenv.config({ path: './.env' });
+
+import app from './app';
 
 const DB = `${process.env.DB_DATABASE}`;
 
 mongoose
-  .connect(DB, {} as ConnectOptions)
+  .connect(DB)
   .then(() => {
     console.log('DB connection was successful!');
   })
